@@ -8,13 +8,19 @@ services:
       - "443:443"
       - "8080:8080"
     volumes:
-      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock
+  hello-world-semel:
+    build: ./hello-world-semel
+    container_name: hello-world-semel
     labels:
-      - traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)
-  hello-world:
-    build: ./hello-world
-    container_name: hello-world
+      - traefik.http.routers.hello-world-semel.rule=Host(`helloworld.docker.localhost`) && PathPrefix(`/semel`)
+      - traefik.http.routers.hello-world-semel.middlewares=strip-app-prefixes@file
+      - traefik.http.services.hello-world-semel.loadbalancer.server.port=8000
+  hello-world-bis:
+    build: ./hello-world-bis
+    container_name: hello-world-bis
     labels:
-      - traefik.http.routers.helloworld-router.rule=Host(`helloworld.docker.localhost`)
-      - traefik.http.services.helloworld-service.loadbalancer.server.port=8000
+      - traefik.http.routers.hello-world-bis.rule=Host(`helloworld.docker.localhost`) && PathPrefix(`/bis`)
+      - traefik.http.routers.hello-world-bis.middlewares=strip-app-prefixes@file
+      - traefik.http.services.hello-world-bis.loadbalancer.server.port=8000

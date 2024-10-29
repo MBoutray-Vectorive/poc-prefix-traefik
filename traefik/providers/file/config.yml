@@ -1,0 +1,7 @@
+http:
+  middlewares:
+    strip-app-prefixes:
+      stripprefix:
+        prefixes:
+          - "/semel"
+          - "/bis"
