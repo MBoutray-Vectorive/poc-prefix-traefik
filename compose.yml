@@ -1,0 +1,20 @@
+services:
+  reverse-proxy:
+    image: traefik:3.1.6
+    container_name: traefik
+    hostname: traefik
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)
+  hello-world:
+    build: ./hello-world
+    container_name: hello-world
+    labels:
+      - traefik.http.routers.helloworld-router.rule=Host(`helloworld.docker.localhost`)
+      - traefik.http.services.helloworld-service.loadbalancer.server.port=8000
