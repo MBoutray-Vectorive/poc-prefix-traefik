@@ -11,15 +11,19 @@ services:
       - ./traefik:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock
   hello-world-semel:
-    build: ./hello-world-semel
+    build: .
     container_name: hello-world-semel
+    volumes:
+      - ./hello-world-semel:/www
     labels:
       - traefik.http.routers.hello-world-semel.rule=Host(`helloworld.docker.localhost`) && PathPrefix(`/semel`)
       - traefik.http.routers.hello-world-semel.middlewares=strip-app-prefixes@file
       - traefik.http.services.hello-world-semel.loadbalancer.server.port=8000
   hello-world-bis:
-    build: ./hello-world-bis
+    build: .
     container_name: hello-world-bis
+    volumes:
+      - ./hello-world-bis:/www
     labels:
       - traefik.http.routers.hello-world-bis.rule=Host(`helloworld.docker.localhost`) && PathPrefix(`/bis`)
       - traefik.http.routers.hello-world-bis.middlewares=strip-app-prefixes@file
